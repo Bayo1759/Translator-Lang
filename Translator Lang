@@ -1,0 +1,104 @@
+<title>Language Translator</title> <style> body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: none;
+            appearance: none;
+        }
+
+        select,
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        #translatedText {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Language Translator</h1>
+        <textarea
+            id="sourceText"
+            placeholder="Enter text to translate"
+        ></textarea>
+        <select id="targetLanguage">
+            <option value="fr">French</option>
+            <option value="it">Italian</option>
+        </select>
+        <button id="translateBtn">Translate</button>
+        <p>Translated Text:</p>
+        <p id="translatedText"></p>
+    </div>
+    <script>
+        async function translateText() {
+            const sourceText = document.getElementById("sourceText").value;
+            const targetLanguage =
+                document.getElementById("targetLanguage").value;
+            const url =
+                "https://google-translate1.p.rapidapi.com/language/translate/v2";
+            const options = {
+                method: "POST",
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                    "Accept-Encoding": "application/gzip",
+                    "X-RapidAPI-Key": "a39de9e64dmshba998bf31474104p1912b1jsn26af6a4e466a",
+                    "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+                },
+                body: new URLSearchParams({
+                    q: sourceText,
+                    target: targetLanguage,
+                    source: "en",
+                }),
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                const translatedText =
+                    result.data.translations[0].translatedText;
+                document.getElementById("translatedText").innerText =
+                    translatedText;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        document
+            .getElementById("translateBtn")
+            .addEventListener("click", translateText);
+    </script>
+</body>
